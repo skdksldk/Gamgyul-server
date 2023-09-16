@@ -1,39 +1,27 @@
-const express = require("express");
-const mongoose = require("mongoose");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db";
+import {
+  errorResponserHandler,
+  invalidPathHandler,
+} from "./middleware/errorHandler";
+
+// Routes
+import userRoutes from "./routes/userRoutes";
+
+dotenv.config();
+connectDB();
 const app = express();
-const errorResponserHandler = require("./middleware/errorHandler").errorResponserHandler;
-const invalidPathHandler = require("./middleware/errorHandler").invalidPathHandler;
-
-require('dotenv').config();
-
-//import routes
-const userRoutes = require('./routes/userRoutes');
-
-const MONGO_URI = process.env.MONGO_URI; // 환경 변수로부터 MongoDB 연결 문자열을 가져옵니다.
-
-if (!MONGO_URI) {
-    console.error('MongoDB connection string not found. Please set the MONGO_URI environment variable.');
-    process.exit(1);
-}
-
-//database connection
-mongoose.connect(process.env.MONGO_URI, {
-    
-})
-    .then(() => console.log("DB connected"))
-    .catch((err) => console.log(err));
-
-app.use('/api/users', userRoutes);
-
 app.use(express.json());
 
-//error middleware
-app.use(errorResponserHandler);
-app.use(invalidPathHandler);
-
-app.get("/", (req,res) => {
-    res.send("server is running...");
+app.get("/", (req, res) => {
+  res.send("Server is running...");
 });
+
+app.use("/api/users", userRoutes);
+
+app.use(invalidPathHandler);
+app.use(errorResponserHandler);
 
 const PORT = process.env.PORT || 5000;
 
