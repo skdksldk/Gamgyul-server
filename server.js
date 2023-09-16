@@ -1,8 +1,23 @@
-import express from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
+const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
+
+require('dotenv').config();
+
+const MONGO_URI = process.env.MONGO_URI; // 환경 변수로부터 MongoDB 연결 문자열을 가져옵니다.
+
+if (!MONGO_URI) {
+    console.error('MongoDB connection string not found. Please set the MONGO_URI environment variable.');
+    process.exit(1);
+}
+
+//database connection
+mongoose.connect(process.env.MONGO_URI, {
+    
+})
+    .then(() => console.log("DB connected"))
+    .catch((err) => console.log(err));
+
 app.use(express.json());
 
 app.get("/", (req,res) => {
