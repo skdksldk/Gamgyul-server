@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const errorResponserHandler = require("./middleware/errorHandler").errorResponserHandler;
+const invalidPathHandler = require("./middleware/errorHandler").invalidPathHandler;
 
 require('dotenv').config();
 
@@ -24,6 +26,10 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/users', userRoutes);
 
 app.use(express.json());
+
+//error middleware
+app.use(errorResponserHandler);
+app.use(invalidPathHandler);
 
 app.get("/", (req,res) => {
     res.send("server is running...");
