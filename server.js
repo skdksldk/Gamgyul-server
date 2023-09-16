@@ -4,6 +4,9 @@ const app = express();
 
 require('dotenv').config();
 
+//import routes
+const userRoutes = require('./routes/userRoutes');
+
 const MONGO_URI = process.env.MONGO_URI; // 환경 변수로부터 MongoDB 연결 문자열을 가져옵니다.
 
 if (!MONGO_URI) {
@@ -17,6 +20,8 @@ mongoose.connect(process.env.MONGO_URI, {
 })
     .then(() => console.log("DB connected"))
     .catch((err) => console.log(err));
+
+app.use('/api/users', userRoutes);
 
 app.use(express.json());
 
