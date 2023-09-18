@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import connectDB from "./config/db";
 import {
   errorResponserHandler,
@@ -17,6 +18,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Server is running...");
 });
+
+// static assets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use("/api/users", userRoutes);
 
