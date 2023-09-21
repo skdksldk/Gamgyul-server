@@ -80,24 +80,24 @@ const updatePost = async (req, res, next) => {
 };
 
 const deletePost = async (req, res, next) => {
-    try {
-      const post = await Post.findOneAndDelete({ slug: req.params.slug });
-  
-      if (!post) {
-        const error = new Error("Post aws not found");
-        return next(error);
-      }
-  
-      await Comment.deleteMany({ post: post._id });
-  
-      return res.json({
-        message: "Post is successfully deleted",
-      });
-    } catch (error) {
-      next(error);
+  try {
+    const post = await Post.findOneAndDelete({ slug: req.params.slug });
+
+    if (!post) {
+      const error = new Error("Post aws not found");
+      return next(error);
     }
+
+    await Comment.deleteMany({ post: post._id });
+
+    return res.json({
+      message: "Post is successfully deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-  
+
 const getPost = async (req, res, next) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug }).populate([
@@ -137,4 +137,19 @@ const getPost = async (req, res, next) => {
   }
 };
 
-export { createPost, updatePost, deletePost, getPost };
+const getAllPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find({}).populate([
+      {
+        path: "user",
+        select: ["avatar", "name", "verified"],
+      },
+    ]);
+
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createPost, updatePost, deletePost, getPost, getAllPosts };

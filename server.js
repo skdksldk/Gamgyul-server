@@ -21,12 +21,12 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
-// static assets
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+
+// static assets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use(invalidPathHandler);
 app.use(errorResponserHandler);
